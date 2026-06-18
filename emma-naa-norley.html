@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Emma Naa Norley Noi | Personal Assistant</title>
+<meta name="description" content="Chat with Emma Naa Norley Noi's personal AI assistant about her pharmacy career, skills, and experience — and generate a tailored CV instantly." />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Emma Naa Norley Noi | Personal Assistant" />
+<meta property="og:description" content="Chat with Emma's personal AI assistant about her pharmacy career, skills, and experience." />
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Emma Naa Norley Noi | Personal Assistant" />
+<meta name="twitter:description" content="Chat with Emma's personal AI assistant about her pharmacy career, skills, and experience." />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #eef7f4; min-height: 100vh; min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 16px; }
+  #app { width: 100%; max-width: 480px; height: min(700px, 88vh); height: min(700px, 88dvh); background: #fff; border-radius: 18px; box-shadow: 0 8px 40px rgba(11,89,79,0.15); display: flex; flex-direction: column; overflow: hidden; }
+  #header { background: linear-gradient(135deg, #0B594F 0%, #1A8F7E 100%); color: white; padding: 16px 18px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+  .avatar { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: white; flex-shrink: 0; }
+  .info h2 { font-size: 15px; font-weight: 600; }
+  .info p { font-size: 11px; color: #B5E8DE; margin-top: 2px; }
+  .status { margin-left: auto; display: flex; align-items: center; gap: 5px; font-size: 11px; color: #9FE1CB; white-space: nowrap; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #1D9E75; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+  #tabs { display: flex; background: #f8f9fa; border-bottom: 1px solid #e9ecef; flex-shrink: 0; }
+  .tab { flex: 1; padding: 11px 6px; font-size: 12px; border: none; background: transparent; color: #6c757d; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; border-bottom: 2.5px solid transparent; transition: all 0.15s; font-family: inherit; }
+  .tab.active { color: #0B594F; border-bottom-color: #0B594F; background: #fff; font-weight: 600; }
+  .tab:hover:not(.active) { color: #1A8F7E; background: #eef7f4; }
+  .panel { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+  .panel.active { display: flex; }
+  #messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
+  .msg { display: flex; gap: 8px; align-items: flex-end; }
+  .msg.user { flex-direction: row-reverse; }
+  .bubble { max-width: 82%; padding: 12px 16px; border-radius: 18px; font-size: 15px; line-height: 1.7; letter-spacing: 0.1px; }
+  .bubble p { margin: 0 0 10px 0; }
+  .bubble p:last-child { margin-bottom: 0; }
+  .msg.bot .bubble { background: #eef7f4; color: #1a1a2e; border-bottom-left-radius: 4px; }
+  .msg.user .bubble { background: linear-gradient(135deg, #0B594F, #1A8F7E); color: white; border-bottom-right-radius: 4px; }
+  .msg-av { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+  .msg-av.bot-av { background: #0B594F; color: white; }
+  .msg-av.user-av { background: #e9ecef; color: #6c757d; }
+  #quick-btns { padding: 8px 14px; display: flex; gap: 6px; flex-wrap: wrap; border-top: 1px solid #f0f0f0; background: #fafafa; }
+  .qbtn { font-size: 11px; padding: 5px 11px; border: 1px solid #dee2e6; border-radius: 20px; background: white; color: #495057; cursor: pointer; white-space: nowrap; transition: all 0.15s; font-family: inherit; }
+  .qbtn:hover { background: #0B594F; color: white; border-color: #0B594F; }
+  #input-row { display: flex; gap: 8px; padding: 12px 14px; border-top: 1px solid #f0f0f0; flex-shrink: 0; align-items: flex-end; }
+  #chat-input { flex: 1; resize: none; min-height: 40px; max-height: 100px; padding: 10px 14px; font-size: 14px; border-radius: 22px; font-family: inherit; border: 1.5px solid #dee2e6; outline: none; transition: border-color 0.15s; }
+  #chat-input:focus { border-color: #1A8F7E; }
+  #send-btn { width: 40px; height: 40px; border-radius: 50%; background: #0B594F; color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.15s; }
+  #send-btn:hover { background: #1A8F7E; }
+  #send-btn:disabled { background: #ccc; cursor: not-allowed; }
+  .typing { display: flex; gap: 4px; align-items: center; padding: 4px 2px; }
+  .typing span { width: 8px; height: 8px; background: #adb5bd; border-radius: 50%; animation: bounce 1.2s infinite; }
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+  .scroll-panel { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+  .section-label { font-size: 11px; font-weight: 600; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+  input[type=text], textarea, select { width: 100%; padding: 10px 14px; border-radius: 10px; font-size: 13px; font-family: inherit; border: 1.5px solid #dee2e6; outline: none; transition: border-color 0.15s; background: white; }
+  input[type=text]:focus, textarea:focus, select:focus { border-color: #1A8F7E; }
+  textarea { resize: vertical; }
+  .primary-btn { width: 100%; padding: 12px; border-radius: 10px; background: linear-gradient(135deg, #0B594F, #1A8F7E); color: white; border: none; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; font-weight: 600; transition: opacity 0.15s; }
+  .primary-btn:hover { opacity: 0.9; }
+  .primary-btn:disabled { background: #ccc; cursor: not-allowed; opacity: 1; }
+  .output-box { background: #f8f9fa; border-radius: 10px; padding: 16px 18px; border: 1px solid #e9ecef; font-size: 14.5px; line-height: 1.8; letter-spacing: 0.1px; color: #212529; max-height: 260px; overflow-y: auto; }
+  .output-box p { margin: 0 0 12px 0; }
+  .output-box p:last-child { margin-bottom: 0; }
+  .output-box p.cv-header { font-weight: 700; color: #0B594F; text-transform: uppercase; font-size: 13px; letter-spacing: 0.5px; margin-top: 16px; margin-bottom: 6px; border-bottom: 1px solid #dee2e6; padding-bottom: 4px; }
+  .output-box p.cv-header:first-child { margin-top: 0; }
+  .output-box ul { margin: 0 0 12px 18px; padding: 0; }
+  .output-box li { margin-bottom: 6px; }
+  .action-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .sec-btn { padding: 8px 14px; border-radius: 8px; border: 1.5px solid #dee2e6; background: white; color: #495057; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 6px; font-family: inherit; transition: all 0.15s; }
+  .sec-btn:hover { border-color: #0B594F; color: #0B594F; }
+  .info-box { border-radius: 10px; padding: 10px 14px; font-size: 12px; line-height: 1.6; display: flex; gap: 8px; align-items: flex-start; }
+  .info-box.green { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+  .info-box.blue { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+  .info-box.yellow { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+  .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .share-bar { background: #f8f9fa; border-top: 1px solid #e9ecef; padding: 10px 14px; display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  .share-bar span { font-size: 11px; color: #6c757d; }
+  .share-btn { padding: 6px 12px; border-radius: 16px; border: 1px solid #dee2e6; background: white; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 4px; color: #495057; font-family: inherit; transition: all 0.15s; }
+  .share-btn:hover { background: #0B594F; color: white; border-color: #0B594F; }
+  .role-fields { display: none; gap: 10px; flex-direction: column; padding: 12px; background: #f8fbfa; border: 1px dashed #b8dcd3; border-radius: 10px; }
+  .role-fields.active { display: flex; }
+  @media (max-width: 580px) {
+    body { padding: 0; align-items: flex-end; }
+    #app { max-width: 100%; width: 100%; height: 100vh; height: 100dvh; border-radius: 0; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="header">
+    <div class="avatar">EN</div>
+    <div class="info">
+      <h2>Emma Naa Norley Noi</h2>
+      <p>Licensed Pharmacy Technician · Accra</p>
+    </div>
+    <div class="status"><div class="dot"></div>Online</div>
+  </div>
+  <div id="tabs">
+    <button class="tab active" onclick="switchTab('chat')"><i class="ti ti-message-circle"></i> Chat</button>
+    <button class="tab" onclick="switchTab('cv')"><i class="ti ti-file-cv"></i> CV</button>
+    <button class="tab" onclick="switchTab('interview')"><i class="ti ti-presentation"></i> Interview</button>
+    <button class="tab" onclick="switchTab('profile')"><i class="ti ti-user-edit"></i> Update</button>
+  </div>
+
+  <!-- CHAT PANEL -->
+  <div id="chat-panel" class="panel active">
+    <div id="messages">
+      <div class="msg bot">
+        <div class="msg-av bot-av">EN</div>
+        <div class="bubble">Hi! I'm Emma's personal assistant. Ask me about her pharmacy experience, certifications, skills, or career journey.</div>
+      </div>
+    </div>
+    <div id="quick-btns">
+      <button class="qbtn" onclick="sendQuick('Tell me about your professional background')">Background</button>
+      <button class="qbtn" onclick="sendQuick('What are your core competencies?')">Core skills</button>
+      <button class="qbtn" onclick="sendQuick('Walk me through your pharmacy career')">Career journey</button>
+      <button class="qbtn" onclick="sendQuick('What certifications do you hold?')">Certifications</button>
+      <button class="qbtn" onclick="sendQuick('Why should I hire you?')">Why hire me?</button>
+      <button class="qbtn" onclick="sendQuick('What are your career goals?')">Goals</button>
+    </div>
+    <div id="input-row">
+      <textarea id="chat-input" placeholder="Ask anything about Emma..." rows="1" onkeydown="handleKey(event)"></textarea>
+      <button id="send-btn" onclick="sendChat()"><i class="ti ti-send" style="font-size:16px"></i></button>
+    </div>
+  </div>
+
+  <!-- CV PANEL -->
+  <div id="cv-panel" class="panel">
+    <div class="scroll-panel">
+      <div class="info-box blue">
+        <i class="ti ti-sparkles" style="font-size:16px;flex-shrink:0;margin-top:1px"></i>
+        <span>Enter a job title and optional description. The AI tailors Emma's CV to match the role — ready to paste into Word as Times New Roman size 12.</span>
+      </div>
+      <div>
+        <div class="section-label">Target role or job title</div>
+        <input type="text" id="role-input" placeholder="e.g. Senior Pharmacy Technician, Pharmacovigilance Officer..." />
+      </div>
+      <div>
+        <div class="section-label">Job description or key requirements (optional)</div>
+        <textarea id="role-desc" rows="4" placeholder="Paste the job description here for a more targeted CV..."></textarea>
+      </div>
+      <button class="primary-btn" id="gen-cv-btn" onclick="generateCV()"><i class="ti ti-wand"></i> Generate Tailored CV</button>
+      <div id="cv-output" style="display:none">
+        <div class="section-label">Tailored CV</div>
+        <div class="output-box" id="cv-preview"></div>
+        <div class="action-row" style="margin-top:8px">
+          <button class="sec-btn" onclick="copyCV()"><i class="ti ti-copy"></i> Copy text</button>
+          <button class="sec-btn" onclick="generateCV()"><i class="ti ti-refresh"></i> Regenerate</button>
+        </div>
+      </div>
+      <div class="info-box green">
+        <i class="ti ti-info-circle" style="font-size:16px;flex-shrink:0;margin-top:1px"></i>
+        <span>Copy the CV text → paste into Microsoft Word → set font to Times New Roman, size 12 → save and send.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERVIEW PANEL -->
+  <div id="interview-panel" class="panel">
+    <div class="scroll-panel">
+      <div class="info-box blue">
+        <i class="ti ti-microphone" style="font-size:16px;flex-shrink:0;margin-top:1px"></i>
+        <span>Type an interview question and get a confident, structured answer based on Emma's real experience.</span>
+      </div>
+      <div>
+        <div class="section-label">Interview question</div>
+        <textarea id="interview-q" rows="3" placeholder='"Tell me about yourself" or "Why pharmacy?" or "Describe a medication safety issue you caught"...'></textarea>
+      </div>
+      <div>
+        <div class="section-label">Role you're interviewing for (optional)</div>
+        <input type="text" id="interview-role" placeholder="e.g. Hospital Pharmacy Technician, Pharmacovigilance Officer..." />
+      </div>
+      <button class="primary-btn" id="interview-btn" onclick="answerInterview()"><i class="ti ti-player-play"></i> Generate Answer</button>
+      <div id="interview-output" style="display:none">
+        <div class="section-label">Suggested answer</div>
+        <div class="output-box" id="interview-answer"></div>
+        <div class="action-row" style="margin-top:8px">
+          <button class="sec-btn" onclick="copyInterview()"><i class="ti ti-copy"></i> Copy answer</button>
+          <button class="sec-btn" onclick="answerInterview()"><i class="ti ti-refresh"></i> Regenerate</button>
+        </div>
+      </div>
+      <div class="info-box yellow">
+        <i class="ti ti-bulb" style="font-size:16px;flex-shrink:0;margin-top:1px"></i>
+        <span>Tip: Keep this open on your phone during video calls. Personalise with specific memories and speak naturally — don't read word for word.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE UPDATE PANEL -->
+  <div id="profile-panel" class="panel">
+    <div class="scroll-panel">
+      <div class="info-box blue">
+        <i class="ti ti-refresh" style="font-size:16px;flex-shrink:0;margin-top:1px"></i>
+        <span>Add a new role, certification, skill, or achievement. When you add a new role with job title, place of work, and duration, the assistant can instantly generate an updated CV with that role as your most recent experience.</span>
+      </div>
+      <div>
+        <div class="section-label">Update type</div>
+        <select id="update-type" onchange="onUpdateTypeChange()">
+          <option value="role">New job role / position</option>
+          <option value="certification">New certification</option>
+          <option value="skill">New skill or expertise</option>
+          <option value="achievement">New achievement / milestone</option>
+          <option value="other">Other career update</option>
+        </select>
+      </div>
+
+      <!-- Structured fields for a new role -->
+      <div id="role-fields" class="role-fields active">
+        <div>
+          <div class="section-label">Job title</div>
+          <input type="text" id="new-role-title" placeholder="e.g. Senior Pharmacy Technician" />
+        </div>
+        <div>
+          <div class="section-label">Place of work</div>
+          <input type="text" id="new-role-place" placeholder="e.g. 37 Military Hospital — Accra" />
+        </div>
+        <div>
+          <div class="section-label">Duration</div>
+          <input type="text" id="new-role-duration" placeholder="e.g. January 2027 – Present" />
+        </div>
+        <div>
+          <div class="section-label">Key duties / achievements (optional)</div>
+          <textarea id="new-role-notes" rows="3" placeholder="One per line — e.g. Process 150+ prescriptions daily..."></textarea>
+        </div>
+        <button class="primary-btn" id="add-role-cv-btn" onclick="addRoleAndGenerateCV()">
+          <i class="ti ti-wand"></i> Add Role & Generate Updated CV
+        </button>
+      </div>
+
+      <!-- Generic text update -->
+      <div id="generic-fields" style="display:none">
+        <div class="section-label">Details</div>
+        <textarea id="update-text" rows="4" placeholder="e.g. 'Completed Pharmacovigilance certification, January 2027'"></textarea>
+        <button class="primary-btn" style="margin-top:10px" onclick="addGenericUpdate()"><i class="ti ti-plus"></i> Add to profile</button>
+      </div>
+
+      <div>
+        <div class="section-label">Current saved updates (<span id="update-count">0</span>)</div>
+        <div id="updates-list" class="output-box" style="min-height:60px"><p style="color:#adb5bd">No updates added yet.</p></div>
+      </div>
+
+      <div id="role-cv-output" style="display:none">
+        <div class="section-label">Updated CV</div>
+        <div class="output-box" id="role-cv-preview"></div>
+        <div class="action-row" style="margin-top:8px">
+          <button class="sec-btn" onclick="copyRoleCV()"><i class="ti ti-copy"></i> Copy text</button>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button class="sec-btn" onclick="exportProfile()"><i class="ti ti-download"></i> Save updates to file</button>
+        <button class="sec-btn" onclick="document.getElementById('import-file').click()"><i class="ti ti-upload"></i> Load updates from file</button>
+        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importProfile(event)" />
+      </div>
+      <div class="info-box green">
+        <i class="ti ti-info-circle" style="font-size:16px;flex-shrink:0;margin-top:1px"></i>
+        <span>Click "Save updates to file" before closing, and "Load updates from file" when you reopen, to keep your update history.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="share-bar">
+    <span>Share this assistant:</span>
+    <button class="share-btn" onclick="copyLink()"><i class="ti ti-link"></i> Copy link</button>
+    <button class="share-btn" onclick="shareWA()"><i class="ti ti-brand-whatsapp"></i> WhatsApp</button>
+  </div>
+</div>
+
+<script>
+// =============================================================
+// PROXY URL — point this at your deployed proxy (same Railway
+// app used for Nana Kwame works, since it just forwards to the
+// AI model with whatever system prompt is sent).
+// =============================================================
+const PROXY_URL = 'https://nk-personal-assistant-proxy-production.up.railway.app/v1/messages';
+
+const PROFILE = `You are a friendly, professional personal assistant chatbot for Emma Naa Norley Noi. Speak warmly and professionally, in first person as if representing her. Be confident, concise, and helpful.
+
+FORMATTING RULE (STRICT): Never use markdown syntax of any kind — no asterisks for bold or italics, no hash symbols for headers, no backticks, no markdown bullet dashes. Write in completely plain text with no special formatting characters at all.
+
+KEY FACTS:
+- Full name: Emma Naa Norley Noi
+- Location: Accra, Ghana
+- Phone: +233 202 407 511
+- Email: noiemma103@gmail.com
+- Profession: Licensed Pharmacy Technician with 5+ years of progressive experience
+- Do NOT state, estimate, or imply her age or date of birth under any circumstances. If asked, politely decline and redirect to her professional background.
+
+EDUCATION:
+- Higher National Diploma (HND) in Dispensing Technology — Maranatha University College (January 2020 – May 2023)
+
+PROFESSIONAL EXPERIENCE:
+1. Pharmacy Technician | Midway Hospital, Accra (June 2026 – Present)
+   Processes and dispenses prescriptions per physician instructions and hospital protocols; prepares medications with correct dosage, labelling and documentation; supports pharmacists in delivering safe pharmaceutical care; maintains patient medication records in pharmacy information management systems; monitors inventory and coordinates replenishment; participates in QA and regulatory compliance; counsels patients under pharmacist supervision.
+
+2. Pharmacy Technician | Prime Pharmacy Limited, Accra (April 2024 – October 2025)
+   Processed and verified 100+ prescriptions weekly; collaborated with 2 licensed pharmacists on medication preparation and patient counselling; served as primary point of contact for 30+ patients daily; conducted monthly QC inspections of 200+ medications; maintained precise records in pharmacy information systems.
+
+3. National Service Personnel — Pharmacy Technician | Korle Bu Teaching Hospital, Accra (November 2023 – October 2024)
+   Prepared and packaged 30+ medications daily including tablet counting, liquid measurement and compound preparation; screened injectables for contamination, defects and expiration; applied patient-specific labelling; managed inventory, ordering and expiry monitoring; adhered strictly to hospital pharmacy safety protocols.
+
+4. Pharmacy Technician | Bedreich Pharmacy, Greater Accra (August 2022 – March 2023)
+   Maintained patient profiles with 100% documentation accuracy; oversaw procurement/restocking of ~70% of formulary medications; processed daily transactions for 10+ customers; supported workflow improvements.
+
+5. Medicine Counter Assistant | Richbaah Pharmacy, Greater Accra (January 2018 – November 2018)
+   Assisted in filling 10+ prescriptions and packaging 40+ medications weekly; served 15+ clients daily; managed shelf stocking, cashier duties and ~80% of price verification checks.
+
+6. Medicine Counter Assistant | Avenue Chemist, Greater Accra (April 2017 – December 2017)
+   Assisted 30+ customers daily with product selection; verified insurance/billing for 50+ patients monthly; coordinated with pharmaceutical reps on samples; supported 3 pharmacists with admin and operations.
+
+CORE COMPETENCIES:
+Prescription Processing, Medication Preparation & Dispensing; Pharmaceutical Inventory Management & Stock Control; Pharmacy Information Systems, EMR & HIS Management; Medication Safety, Quality Assurance & Pharmacovigilance; Regulatory Compliance & Pharmacy Operations; Patient Support, Communication & Customer Service Excellence; Documentation, Data Management & Team Collaboration.
+
+CERTIFICATIONS:
+- Certificate of Training in Medicine Counter Assistant — Avenue Chemists Training School (2017)
+
+TONE:
+Warm, professional, patient-centred. If asked something not covered, give a graceful answer and offer to share related background.`;
+
+const CV_SYSTEM = `You are generating an ATS-friendly tailored CV for Emma Naa Norley Noi for a specific target role. Output PLAIN TEXT ONLY — no markdown, no asterisks, no hashes, no backticks. Use UPPERCASE section headers on their own line, and use hyphen bullets ("- ") for bullet points under PROFESSIONAL EXPERIENCE and CERTIFICATIONS.
+
+CONTACT (always include exactly):
+EMMA NAA NORLEY NOI
+Phone: +233 202 407 511 | Email: noiemma103@gmail.com
+(No date of birth, no age.)
+
+EDUCATION:
+Higher National Diploma (HND) in Dispensing Technology — Maranatha University College (January 2020 – May 2023)
+
+EXPERIENCE (raw duties — do not invent beyond what's implied):
+Pharmacy Technician | Midway Hospital, Accra | June 2026 – Present
+- Processes and dispenses prescriptions per physician instructions, pharmacy regulations and hospital protocols
+- Prepares medications ensuring correct dosage, labelling and documentation
+- Supports pharmacists and healthcare professionals in delivering safe pharmaceutical care
+- Maintains accurate patient medication records in pharmacy information management systems
+- Monitors inventory levels, conducts stock checks and coordinates replenishment
+- Participates in QA activities and ensures compliance with hospital safety and regulatory standards
+- Provides professional patient assistance on medication use, storage and adherence under pharmacist supervision
+
+Pharmacy Technician | Prime Pharmacy Limited, Accra | April 2024 – October 2025
+- Processed and verified 100+ prescriptions weekly with high accuracy
+- Collaborated with 2 licensed pharmacists on medication preparation, dispensing and counselling support
+- Served as primary point of contact for 30+ patients daily (in-person and phone)
+- Conducted monthly quality control inspections of 200+ medications
+- Maintained precise data entry and documentation in pharmacy information management systems
+
+National Service Personnel — Pharmacy Technician | Korle Bu Teaching Hospital, Accra | November 2023 – October 2024
+- Prepared and packaged 30+ medications daily including tablet counting, liquid measurement and compounding
+- Screened injectable medications for contamination, defects and expiration prior to dispensing
+- Applied accurate patient-specific labelling with dosage instructions and clinical identifiers
+- Managed inventory control: supply ordering, restocking and proactive expiry monitoring
+- Ensured strict adherence to hospital pharmacy safety protocols and regulatory requirements
+
+Pharmacy Technician | Bedreich Pharmacy, Greater Accra | August 2022 – March 2023
+- Maintained and updated patient profiles with 100% documentation accuracy
+- Oversaw procurement and restocking of approximately 70% of formulary medications
+- Processed daily financial transactions and billing for 10+ customers
+- Supported operational workflow improvements to enhance dispensing efficiency
+
+Medicine Counter Assistant | Richbaah Pharmacy, Greater Accra | January 2018 – November 2018
+- Assisted in filling 10+ prescriptions and packaging 40+ medications weekly
+- Provided courteous customer service to 15+ clients daily
+- Managed shelf stocking, cashier duties and ~80% of price verification checks
+
+Medicine Counter Assistant | Avenue Chemist, Greater Accra | April 2017 – December 2017
+- Assisted 30+ customers daily with product selection and usage explanations
+- Verified insurance coverage and billing information for 50+ patients monthly
+- Coordinated with pharmaceutical representatives to manage sample stock
+- Supported 3 pharmacists with administrative and operational tasks
+
+CERTIFICATIONS:
+- Certificate of Training in Medicine Counter Assistant — Avenue Chemists Training School (2017)
+
+CORE COMPETENCIES POOL (pick role-relevant ones for CORE COMPETENCIES line):
+Prescription Processing, Medication Preparation & Dispensing, Pharmaceutical Inventory Management, Stock Control, Pharmacy Information Systems, EMR, HIS, Medication Safety, Quality Assurance, Pharmacovigilance, Regulatory Compliance, Pharmacy Operations, Patient Counselling, Customer Service, Documentation, Data Management, Team Collaboration, Compounding, Injectable Screening, Inventory Audits, Procurement.
+
+ATS-OPTIMISATION RULES (CRITICAL):
+- Single-column, simple layout, plain UPPERCASE section headers — no tables, columns, icons or graphics
+- Mirror exact keywords/phrasing from the target job title and job description wherever they truthfully apply
+- Standard section order: PROFESSIONAL SUMMARY, CORE COMPETENCIES, PROFESSIONAL EXPERIENCE, EDUCATION, CERTIFICATIONS
+- PROFESSIONAL SUMMARY: a tight 3–4 sentence paragraph reflecting the target role
+- CORE COMPETENCIES: a single comma-separated line of role-relevant keywords (not bullets)
+- PROFESSIONAL EXPERIENCE: each role has its title, employer, location and dates on one line, then hyphen-bullet responsibilities AND at least one clearly-implied achievement bullet (use phrases like "resulting in", "contributing to" — do not invent numeric metrics beyond those provided)
+- CERTIFICATIONS: bullet list
+- Do NOT fabricate employers or experiences. EXCEPT incorporate any items listed under "RECENT UPDATES TO EMMA'S PROFILE" as real and current — a new role becomes the most recent PROFESSIONAL EXPERIENCE entry (placed above Midway Hospital if it's more recent), a new certification is added under CERTIFICATIONS, a new skill is woven into CORE COMPETENCIES.
+- Keep contact info exactly as given. No date of birth. Roughly one page of content.`;
+
+const INTERVIEW_SYSTEM = `You are helping Emma Naa Norley Noi prepare strong job-interview answers based entirely on her real background.
+
+FORMATTING RULE (STRICT): Output plain text only. No markdown, no asterisks, no hashes, no backticks, no bullet dashes. Full prose paragraphs only.
+
+HER PROFILE:
+- Based in Accra, Ghana
+- Licensed Pharmacy Technician, 5+ years across retail, community and hospital pharmacy
+- HND Dispensing Technology, Maranatha University College
+- Current: Pharmacy Technician at Midway Hospital (June 2026 – present)
+- Previous: Prime Pharmacy, Korle Bu Teaching Hospital (national service), Bedreich Pharmacy, Richbaah Pharmacy, Avenue Chemist
+- Strengths: prescription accuracy, injectable screening, inventory control, pharmacy information systems/EMR/HIS, patient counselling, regulatory compliance
+
+ANSWER GUIDELINES:
+- First person as Emma
+- STAR method woven into flowing paragraphs for behavioural questions
+- For "Tell me about yourself" give a 3-part arc: training in dispensing → retail/community foundation → hospital pharmacy maturity
+- 150–250 words: substantial but not rambling
+- Reference real employers, certifications, scale figures (100+ prescriptions/week, 200+ QC checks/month, etc.)
+- End with a forward-looking statement tying back to the role
+- Natural and confident, not robotic
+- Full prose paragraphs only — never bullets or numbered lists`;
+
+let chatHistory = [];
+let currentCV = '';
+let currentRoleCV = '';
+let currentInterview = '';
+let profileUpdates = [];
+
+function buildUpdatesText() {
+  if (profileUpdates.length === 0) return '';
+  const lines = profileUpdates.map(u => {
+    if (u.type === 'role' && u.title) {
+      const notes = u.notes ? `\n  Duties/achievements: ${u.notes.replace(/\n/g, ' | ')}` : '';
+      return `- [ROLE] ${u.title} at ${u.place || 'N/A'} (${u.duration || 'N/A'})${notes}`;
+    }
+    return `- [${u.type.toUpperCase()}] ${u.text || ''}`;
+  }).join('\n');
+  return `\n\nRECENT UPDATES TO EMMA'S PROFILE (most current information — these take priority over anything above if there's a conflict, since they reflect her latest progress):\n${lines}`;
+}
+
+function renderUpdatesList() {
+  const box = document.getElementById('updates-list');
+  document.getElementById('update-count').textContent = profileUpdates.length;
+  if (profileUpdates.length === 0) {
+    box.innerHTML = '<p style="color:#adb5bd">No updates added yet.</p>';
+    return;
+  }
+  box.innerHTML = profileUpdates.map((u, i) => {
+    let label;
+    if (u.type === 'role') {
+      label = `<strong>New role:</strong> ${escapeHtml(u.title || '')} at ${escapeHtml(u.place || '')} <em>(${escapeHtml(u.duration || '')})</em>`;
+    } else {
+      const typeLabels = { certification: 'Certification', skill: 'Skill', achievement: 'Achievement', other: 'Update' };
+      label = `<strong>${typeLabels[u.type] || 'Update'}:</strong> ${escapeHtml(u.text || '')}`;
+    }
+    return `<p>${label} <a href="#" onclick="removeUpdate(${i});return false;" style="color:#c0392b;font-size:12px;margin-left:6px">[remove]</a></p>`;
+  }).join('');
+}
+
+function onUpdateTypeChange() {
+  const t = document.getElementById('update-type').value;
+  document.getElementById('role-fields').classList.toggle('active', t === 'role');
+  document.getElementById('generic-fields').style.display = (t === 'role') ? 'none' : 'block';
+}
+
+function addGenericUpdate() {
+  const type = document.getElementById('update-type').value;
+  const text = document.getElementById('update-text').value.trim();
+  if (!text) { alert('Please describe the update first.'); return; }
+  profileUpdates.push({ type, text, date: new Date().toISOString().slice(0,10) });
+  document.getElementById('update-text').value = '';
+  renderUpdatesList();
+}
+
+async function addRoleAndGenerateCV() {
+  const title = document.getElementById('new-role-title').value.trim();
+  const place = document.getElementById('new-role-place').value.trim();
+  const duration = document.getElementById('new-role-duration').value.trim();
+  const notes = document.getElementById('new-role-notes').value.trim();
+  if (!title || !place || !duration) {
+    alert('Please enter job title, place of work, and duration.');
+    return;
+  }
+  profileUpdates.push({ type: 'role', title, place, duration, notes, date: new Date().toISOString().slice(0,10) });
+  renderUpdatesList();
+
+  const btn = document.getElementById('add-role-cv-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Generating updated CV...';
+  document.getElementById('role-cv-output').style.display = 'none';
+
+  try {
+    const prompt = `Emma just added a new current role to her profile:\nJob title: ${title}\nPlace of work: ${place}\nDuration: ${duration}\n${notes ? 'Key duties/achievements:\n' + notes + '\n' : ''}\nPlease generate her FULL updated CV with this role placed as her most recent (top) PROFESSIONAL EXPERIENCE entry. Keep the rest of her real experience intact below it. Target role: same as this new job title unless otherwise irrelevant.`;
+    currentRoleCV = await callClaude(CV_SYSTEM, [{ role: 'user', content: prompt }], 1800);
+    document.getElementById('role-cv-preview').innerHTML = renderCV(currentRoleCV);
+    document.getElementById('role-cv-output').style.display = 'block';
+    // Clear fields
+    document.getElementById('new-role-title').value = '';
+    document.getElementById('new-role-place').value = '';
+    document.getElementById('new-role-duration').value = '';
+    document.getElementById('new-role-notes').value = '';
+  } catch (e) {
+    alert('Error generating updated CV. Please try again.');
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '<i class="ti ti-wand"></i> Add Role & Generate Updated CV';
+}
+
+function copyRoleCV() {
+  copyTextWithFallback(currentRoleCV, () => {
+    const btns = document.querySelectorAll('#role-cv-output .sec-btn');
+    btns[0].innerHTML = '<i class="ti ti-check"></i> Copied!';
+    setTimeout(() => { btns[0].innerHTML = '<i class="ti ti-copy"></i> Copy text'; }, 2000);
+  });
+}
+
+function removeUpdate(i) {
+  profileUpdates.splice(i, 1);
+  renderUpdatesList();
+}
+
+function exportProfile() {
+  const blob = new Blob([JSON.stringify(profileUpdates, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'emma-noi-profile-updates.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importProfile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const loaded = JSON.parse(e.target.result);
+      if (Array.isArray(loaded)) {
+        profileUpdates = loaded;
+        renderUpdatesList();
+        alert('Profile updates loaded successfully.');
+      } else { alert('That file does not look like a valid updates file.'); }
+    } catch (err) { alert('Could not read that file.'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function switchTab(tab) {
+  const order = ['chat','cv','interview','profile'];
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(tab + '-panel').classList.add('active');
+  document.querySelectorAll('.tab')[order.indexOf(tab)].classList.add('active');
+}
+
+function escapeHtml(s) {
+  return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function textToParagraphs(text) {
+  const parts = text.split(/\n\s*\n/).map(s => s.trim()).filter(Boolean);
+  const renderBlock = (s) => {
+    const isHeader = /^[A-Z][A-Z\s&/]{2,35}$/.test(s.trim());
+    const escaped = escapeHtml(s.replace(/\n/g, ' '));
+    return isHeader ? '<p><strong>' + escaped + '</strong></p>' : '<p>' + escaped + '</p>';
+  };
+  if (parts.length <= 1) {
+    const lines = text.split(/\n/).map(s => s.trim()).filter(Boolean);
+    return lines.map(renderBlock).join('');
+  }
+  return parts.map(renderBlock).join('');
+}
+
+function renderCV(text) {
+  const lines = text.split(/\n/).map(l => l.trim()).filter(Boolean);
+  let html = '';
+  let inList = false;
+  const closeList = () => { if (inList) { html += '</ul>'; inList = false; } };
+  for (const line of lines) {
+    const isHeader = /^[A-Z][A-Z\s&/]{2,40}$/.test(line);
+    const isBullet = /^[-•*]\s+/.test(line);
+    if (isHeader) {
+      closeList();
+      html += '<p class="cv-header">' + escapeHtml(line) + '</p>';
+    } else if (isBullet) {
+      if (!inList) { html += '<ul>'; inList = true; }
+      html += '<li>' + escapeHtml(line.replace(/^[-•*]\s+/, '')) + '</li>';
+    } else {
+      closeList();
+      html += '<p>' + escapeHtml(line) + '</p>';
+    }
+  }
+  closeList();
+  return html;
+}
+
+function addMsg(role, text) {
+  const box = document.getElementById('messages');
+  const wrap = document.createElement('div');
+  wrap.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
+  const av = document.createElement('div');
+  av.className = 'msg-av ' + (role === 'user' ? 'user-av' : 'bot-av');
+  av.textContent = role === 'user' ? 'You' : 'EN';
+  const bub = document.createElement('div');
+  bub.className = 'bubble';
+  bub.innerHTML = textToParagraphs(text);
+  wrap.appendChild(av);
+  wrap.appendChild(bub);
+  box.appendChild(wrap);
+  box.scrollTop = box.scrollHeight;
+  return bub;
+}
+
+function showTyping() {
+  const box = document.getElementById('messages');
+  const wrap = document.createElement('div');
+  wrap.className = 'msg bot'; wrap.id = 'typer';
+  const av = document.createElement('div');
+  av.className = 'msg-av bot-av'; av.textContent = 'EN';
+  const bub = document.createElement('div');
+  bub.className = 'bubble';
+  bub.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
+  wrap.appendChild(av); wrap.appendChild(bub);
+  box.appendChild(wrap); box.scrollTop = box.scrollHeight;
+}
+function removeTyping() { const t = document.getElementById('typer'); if(t) t.remove(); }
+
+function stripMarkdown(text) {
+  return text
+    .replace(/^#{1,6}\s+/gm, '')
+    .replace(/\*\*\*(.+?)\*\*\*/g, '$1')
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/\*(.+?)\*/g, '$1')
+    .replace(/__(.+?)__/g, '$1')
+    .replace(/_(.+?)_/g, '$1')
+    .replace(/^[ \t]*[-*]\s+/gm, '- ')
+    .replace(/`{1,3}([^`]*)`{1,3}/g, '$1')
+    .replace(/^>\s+/gm, '')
+    .trim();
+}
+
+async function callClaude(system, messages, maxTokens) {
+  const fullSystem = system + buildUpdatesText();
+  const res = await fetch(PROXY_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: maxTokens || 600, system: fullSystem, messages })
+  });
+  const data = await res.json();
+  const raw = (data.content || []).map(b => b.text || '').join('');
+  return stripMarkdown(raw);
+}
+
+async function callClaudeStreaming(system, messages, maxTokens, onChunk) {
+  const fullSystem = system + buildUpdatesText();
+  const res = await fetch(PROXY_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: maxTokens || 600, system: fullSystem, messages, stream: true })
+  });
+  if (!res.body || !res.body.getReader) {
+    const reply = await callClaude(system, messages, maxTokens);
+    onChunk(reply, true);
+    return reply;
+  }
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  let fullText = '';
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n');
+    buffer = lines.pop();
+    for (const line of lines) {
+      if (!line.startsWith('data: ')) continue;
+      const payload = line.slice(6).trim();
+      if (!payload || payload === '[DONE]') continue;
+      try {
+        const evt = JSON.parse(payload);
+        if (evt.type === 'content_block_delta' && evt.delta && evt.delta.text) {
+          fullText += evt.delta.text;
+          onChunk(stripMarkdown(fullText), false);
+        }
+      } catch (e) { /* ignore partial json */ }
+    }
+  }
+  const finalText = stripMarkdown(fullText);
+  onChunk(finalText, true);
+  return finalText;
+}
+
+function trimHistory(history, keepLast) {
+  if (history.length <= keepLast) return history;
+  return history.slice(history.length - keepLast);
+}
+
+async function sendChat() {
+  const inp = document.getElementById('chat-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = ''; inp.style.height = 'auto';
+  document.getElementById('send-btn').disabled = true;
+  addMsg('user', text);
+  chatHistory.push({ role: 'user', content: text });
+  chatHistory = trimHistory(chatHistory, 16);
+  showTyping();
+  try {
+    let bubble = null;
+    const reply = await callClaudeStreaming(PROFILE, chatHistory, 1600, (partial, isDone) => {
+      if (!bubble) { removeTyping(); bubble = addMsg('bot', partial); }
+      else { bubble.innerHTML = textToParagraphs(partial); document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight; }
+    });
+    chatHistory.push({ role: 'assistant', content: reply });
+  } catch(e) {
+    removeTyping();
+    addMsg('bot', 'Sorry, I had a connection issue. Please try again.');
+  }
+  document.getElementById('send-btn').disabled = false;
+}
+
+function sendQuick(q) { document.getElementById('chat-input').value = q; sendChat(); }
+function handleKey(e) { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); } }
+
+async function generateCV() {
+  const role = document.getElementById('role-input').value.trim();
+  const desc = document.getElementById('role-desc').value.trim();
+  if (!role) { alert('Please enter a target role first.'); return; }
+  const btn = document.getElementById('gen-cv-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Tailoring CV...';
+  document.getElementById('cv-output').style.display = 'none';
+  try {
+    const prompt = `TARGET ROLE: ${role}\n${desc ? 'JOB DESCRIPTION:\n' + desc + '\n' : ''}Please write the tailored CV now.`;
+    currentCV = await callClaude(CV_SYSTEM, [{ role: 'user', content: prompt }], 1800);
+    document.getElementById('cv-preview').innerHTML = renderCV(currentCV);
+    document.getElementById('cv-output').style.display = 'block';
+  } catch(e) {
+    alert('Error generating CV. Please try again.');
+  }
+  btn.disabled = false;
+  btn.innerHTML = '<i class="ti ti-wand"></i> Generate Tailored CV';
+}
+
+function copyCV() {
+  copyTextWithFallback(currentCV, () => {
+    const btns = document.querySelectorAll('#cv-output .sec-btn');
+    btns[0].innerHTML = '<i class="ti ti-check"></i> Copied!';
+    setTimeout(() => { btns[0].innerHTML = '<i class="ti ti-copy"></i> Copy text'; }, 2000);
+  });
+}
+
+async function answerInterview() {
+  const q = document.getElementById('interview-q').value.trim();
+  const role = document.getElementById('interview-role').value.trim();
+  if (!q) { alert('Please enter an interview question.'); return; }
+  const btn = document.getElementById('interview-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Crafting answer...';
+  document.getElementById('interview-output').style.display = 'none';
+  try {
+    const prompt = `INTERVIEW QUESTION: "${q}"${role ? '\nROLE: ' + role : ''}\n\nGenerate a strong, authentic interview answer.`;
+    currentInterview = await callClaude(INTERVIEW_SYSTEM, [{ role: 'user', content: prompt }], 700);
+    document.getElementById('interview-answer').innerHTML = textToParagraphs(currentInterview);
+    document.getElementById('interview-output').style.display = 'block';
+  } catch(e) {
+    alert('Error generating answer. Please try again.');
+  }
+  btn.disabled = false;
+  btn.innerHTML = '<i class="ti ti-player-play"></i> Generate Answer';
+}
+
+function copyInterview() {
+  copyTextWithFallback(currentInterview, () => {
+    const btns = document.querySelectorAll('#interview-output .sec-btn');
+    btns[0].innerHTML = '<i class="ti ti-check"></i> Copied!';
+    setTimeout(() => { btns[0].innerHTML = '<i class="ti ti-copy"></i> Copy answer'; }, 2000);
+  });
+}
+
+function copyTextWithFallback(text, onSuccess) {
+  if (!text) { alert('Nothing to copy yet.'); return; }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(onSuccess).catch(() => fallbackCopy(text, onSuccess));
+  } else { fallbackCopy(text, onSuccess); }
+}
+function fallbackCopy(text, onSuccess) {
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    if (ok) onSuccess(); else alert('Could not copy automatically.');
+  } catch (e) { alert('Could not copy automatically.'); }
+}
+function copyLink() {
+  navigator.clipboard.writeText(window.location.href).then(() => alert('Link copied!'));
+}
+function shareWA() {
+  const msg = encodeURIComponent("Chat with Emma's personal assistant to learn about her pharmacy career: " + window.location.href);
+  window.open('https://wa.me/?text=' + msg, '_blank');
+}
+
+document.getElementById('chat-input').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+});
+</script>
+</body>
+</html>
