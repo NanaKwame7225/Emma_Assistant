@@ -382,10 +382,34 @@ Medicine Counter Assistant | Richbaah Pharmacy, Greater Accra | Jan 2018 – Nov
 Medicine Counter Assistant | Avenue Chemist, Greater Accra | Apr 2017 – Dec 2017 | (30+ customers/day, 50+ insurance verifications/month)
 CERTIFICATIONS: Certificate of Training in Medicine Counter Assistant — Avenue Chemists Training School (2017)
 COMPETENCY POOL: Prescription Processing, Medication Preparation & Dispensing, Pharmaceutical Inventory Management, Stock Control, Pharmacy Information Systems, EMR, HIS, Medication Safety, Quality Assurance, Pharmacovigilance, Regulatory Compliance, Pharmacy Operations, Patient Counselling, Customer Service, Documentation, Data Management, Team Collaboration, Compounding, Injectable Screening, Inventory Audits, Procurement
-ATS RULES: Single-column layout, mirror keywords from JD, section order: PROFESSIONAL SUMMARY, CORE COMPETENCIES, PROFESSIONAL EXPERIENCE, EDUCATION, CERTIFICATIONS. SUMMARY=3-4 sentences prose. COMPETENCIES=output as individual bullet lines, one per line starting with "- ", grouped into 2-3 thematic paragraph blocks separated by a blank line (group 1: Clinical/Technical; group 2: Operations/Quality; group 3: Patient Care/Communication — adapt groups to the role). Each role: title|employer|location|dates then hyphen bullets including ≥1 achievement bullet. ~1 page. Incorporate RECENT PROFILE UPDATES if present.`;
+ATS RULES (STRICT — these govern the entire output):
+1. SINGLE-COLUMN plain text only. No tables, columns, text boxes, icons, or graphics.
+2. KEYWORD MIRRORING: scan the job title and description for exact skill/role phrases (e.g. "medication safety", "pharmacovigilance", "inventory management", "patient counselling") and use those exact phrases — not synonyms — wherever they truthfully apply.
+3. SECTION ORDER (exact UPPERCASE headers on own lines): PROFESSIONAL SUMMARY / CORE COMPETENCIES / PROFESSIONAL EXPERIENCE / EDUCATION / CERTIFICATIONS
+4. PROFESSIONAL SUMMARY: 3–4 sentence prose paragraph. Open with her current role and years of experience, weave in 2–3 role-specific keywords, end with a forward-looking statement.
+5. CORE COMPETENCIES: individual bullet lines, one competency per line starting with "- ", grouped into 2–3 thematic blocks separated by a blank line (e.g. Clinical & Technical block / Operations & Quality block / Patient Care & Communication block — adapt to role). Mirror JD language exactly.
+6. PROFESSIONAL EXPERIENCE: Job Title | Employer | Location | Dates on one line, then hyphen bullet points. Every role must include at least one achievement bullet phrased with "resulting in", "contributing to", or "which led to" — honest, no invented figures.
+7. EDUCATION: qualification | institution | dates — one line.
+8. CERTIFICATIONS: most relevant to the role as hyphen bullet lines.
+9. LENGTH: approximately one page. No padding, no irrelevant content.
+10. Incorporate RECENT PROFILE UPDATES if present.`;
 
 const CL_SYS = `You write compelling, personalised cover letters for Emma Naa Norley Noi, a Licensed Pharmacy Technician with 5+ years progressive experience in Accra, Ghana. Output PLAIN TEXT ONLY — no markdown, no asterisks. Full paragraphs. Include: date, employer address block (if known), salutation, opening hook, 2-3 body paragraphs linking Emma's real experience to the role requirements, closing paragraph with call to action, professional sign-off. Sign as "Emma Naa Norley Noi". Draw exclusively on her real background: Midway Hospital (Jun 2026–present), Prime Pharmacy (100+ Rx/week, 200+ QC/month), Korle Bu (injectable screening, compounding), Bedreich Pharmacy, HND Dispensing Technology from Maranatha. Match tone to the user's selected style. You are also available for follow-up revisions.
-FORMAT RULES: Write in full prose paragraphs only — no bullet points anywhere in the letter. The letter must be formatted for Times New Roman 12pt when pasted into Word. At the very top of the output, before the salutation, add a bold centred title line derived from the job title or role in the instruction (e.g. 'APPLICATION FOR THE POSITION OF PHARMACY TECHNICIAN'). Structure: Title line, blank line, date, employer address, salutation, opening paragraph, 2-3 body paragraphs, closing paragraph, sign-off.`;
+FORMAT RULES:
+- Write in full prose paragraphs only — no bullet points, no dashes, no markdown anywhere in the letter.
+- Times New Roman 12pt, single-spaced, when pasted into Word.
+- ATS OPTIMISATION: mirror exact keyword phrases from the job title and description naturally within the prose (e.g. if the JD says "medication safety" use that exact phrase, not "drug safety"). Keep sentences clear and concrete.
+- STRUCTURE (in this exact order):
+  1. Title line: APPLICATION FOR THE POSITION OF [ROLE IN UPPERCASE] — centred, bold
+  2. Blank line
+  3. Date (e.g. 6 July 2026)
+  4. Employer name and address (if known from the instruction)
+  5. Salutation (Dear Hiring Manager, or named if given)
+  6. Opening paragraph: who she is, the specific role she is applying for, and a compelling reason she is a strong match
+  7. Body paragraph 1: her most relevant experience directly tied to the role's key requirements — use the employer's own language
+  8. Body paragraph 2: skills, certifications, or achievements that further support the application
+  9. Closing paragraph: express enthusiasm, invite next steps, professional CTA
+  10. Sign-off: Yours sincerely, [blank line], Emma Naa Norley Noi`;
 
 const IV_SYS = `Help Emma Naa Norley Noi prepare for job interviews. Answer in first person as Emma. Use STAR method woven into flowing prose for behavioural questions. 150-250 words per answer. Reference real employers and scale figures. End with a forward-looking statement. Plain text only — no markdown, no bullets. You are also available for follow-up prep questions.`;
 
@@ -577,8 +601,8 @@ async function sendChat(){
   try{
     let bub=null;
     const reply=await streamClaude(PROFILE_SYS,chatHist,1800,(partial,done)=>{
-      if(!bub){rmTyping();bub=addMsg('bot',partial);}
-      else{bub.innerHTML=toParas(partial);const box=document.getElementById('messages');box.scrollTop=box.scrollHeight;}
+      if(!bub){rmTyping();bub=addMsg('bot',partial);const _w=bub.parentElement;if(_w)setTimeout(()=>_w.scrollIntoView({behavior:'smooth',block:'start'}),50);}
+      else{bub.innerHTML=toParas(partial);}
     });
     chatHist.push({role:'assistant',content:reply});
   }catch(e){rmTyping();addMsg('bot','Sorry — connection issue. Please try again.');}
@@ -683,7 +707,7 @@ async function panelSend(panel){
     const reply=await streamClaude(sys,panelHist[panel],1400,(partial,done)=>{
       if(panel==='pr'){if(done){rmPanelTyping(panel);finishProfile(partial);}return;}
       if(!bub){rmPanelTyping(panel);bub=addPanelMsg(panel,'bot',partial);}
-      else{bub.innerHTML=toParas(partial);document.getElementById(panel+'-messages').scrollTop=document.getElementById(panel+'-messages').scrollHeight;}
+      else{bub.innerHTML=toParas(partial);}
     });
     panelHist[panel].push({role:'assistant',content:reply});panelHist[panel]=trimH(panelHist[panel]);
     if(panel==='cv'&&/PROFESSIONAL SUMMARY/i.test(reply)&&/PROFESSIONAL EXPERIENCE/i.test(reply)){
